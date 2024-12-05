@@ -79,11 +79,3 @@ CLERENCE Alan - Photographe Professionnel & Développeur
 ---
 
 ⭐️ Si ce projet vous aide, n'hésitez pas à lui donner une étoile !
-
-Citations:
-[1] https://everhour.com/blog/github-readme-template/
-[2] https://www.daytona.io/dotfiles/how-to-write-4000-stars-github-readme-for-your-project
-[3] https://www.hatica.io/blog/best-practices-for-github-readme/
-[4] https://github.com/matiassingers/awesome-readme
-[5] https://github.com/banesullivan/README
-[6] https://www.sitepoint.com/github-profile-readme/
