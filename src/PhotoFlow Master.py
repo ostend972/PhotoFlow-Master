@@ -7,7 +7,7 @@ import psutil
 from PIL import Image
 from PIL.ExifTags import TAGS
 from rich.console import Console
-from rich.prompt import Prompt, Confirm, IntPrompt
+from rich.prompt import Prompt, IntPrompt
 from rich.panel import Panel
 from rich.progress import track
 
@@ -36,7 +36,7 @@ class PhotoProManager:
         """Extract the shooting date from an image's EXIF metadata."""
         try:
             with Image.open(image_path) as img:
-                exif_data = img._getexif()
+                exif_data = img.getexif()
                 if exif_data:
                     for tag, value in exif_data.items():
                         if TAGS.get(tag) == "DateTimeOriginal":
@@ -94,21 +94,23 @@ class PhotoProManager:
         self.console.print("[yellow]Vous pouvez entrer jusqu'à 10 sources.[/yellow]")
         self.console.print("[cyan]Appuyez sur Entrée sans rien écrire pour terminer.[/cyan]")
 
-        for i in range(10):
+        i = 0
+        while i < 10:
             source_path_str = Prompt.ask(f"\n📂 Chemin du dossier source #{i+1}")
             if not source_path_str.strip():
                 break
-            
+
             source_path = Path(source_path_str)
             if not source_path.exists() or not source_path.is_dir():
                 self.console.print("[bold red]❌ Chemin invalide ou introuvable. Veuillez réessayer.[/bold red]")
-                continue
-            
+                continue  # Ne pas incrémenter i, permettre une nouvelle tentative
+
             project_name = Prompt.ask(f"📝 Nom du projet pour la source {source_path}")
             source_info[source_path] = {
                 'name': self.sanitize_filename(project_name),
                 'date': None  # La date sera définie plus tard
             }
+            i += 1  # Incrémenter seulement si la source est valide
 
         if not source_info:
             self.console.print("[bold red]❌ Aucune source valide fournie. Annulation.[/bold red]")
@@ -148,8 +150,24 @@ class PhotoProManager:
             description=f"Organisation des fichiers depuis {source_path}...",
         ):
             if file.is_file():
-                shutil.copy2(file, raw_folder / file.name)
-                self.logger.info(f"Fichier copié : {file} -> {raw_folder}")
+                destination = raw_folder / file.name
+
+                # Gérer les collisions de noms de fichiers
+                if destination.exists():
+                    counter = 1
+                    stem = file.stem
+                    suffix = file.suffix
+                    while destination.exists():
+                        destination = raw_folder / f"{stem}_{counter}{suffix}"
+                        counter += 1
+                    self.console.print(f"[yellow]⚠️  Collision détectée : {file.name} renommé en {destination.name}[/yellow]")
+
+                try:
+                    shutil.copy2(file, destination)
+                    self.logger.info(f"Fichier copié : {file} -> {destination}")
+                except Exception as e:
+                    self.logger.error(f"Erreur lors de la copie de {file}: {e}")
+                    self.console.print(f"[bold red]❌ Erreur lors de la copie de {file.name}: {e}[/bold red]")
 
     def main(self):
         self.console.print(

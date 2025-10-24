@@ -37,7 +37,7 @@ pip install -r requirements.txt
 ## 💫 Utilisation
 
 ```bash
-python src/photoflow.py
+python "src/PhotoFlow Master.py"
 ```
 
 Suivez simplement les instructions à l'écran - C'est aussi simple que ça ! 🎉
