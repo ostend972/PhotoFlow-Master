@@ -1,0 +1,81 @@
+{
+  "name": "photoflow-master",
+  "version": "1.0.0",
+  "description": "Application professionnelle d'organisation de projets photo pour photographes",
+  "main": "main.js",
+  "author": "PhotoFlow Master",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --x64",
+    "build:win32": "electron-builder --win --ia32",
+    "dist": "electron-builder --win --x64 --ia32"
+  },
+  "dependencies": {
+    "exiftool-vendored": "^25.0.0",
+    "sharp": "^0.33.0",
+    "fs-extra": "^11.2.0",
+    "date-fns": "^3.0.6",
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.photoflow.master",
+    "productName": "PhotoFlow Master",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PhotoFlow Master",
+      "deleteAppDataOnUninstall": false
+    },
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "**/*",
+      "!dist/**/*",
+      "!node_modules/**/*",
+      "node_modules/exiftool-vendored/**/*",
+      "node_modules/sharp/**/*",
+      "node_modules/fs-extra/**/*",
+      "node_modules/date-fns/**/*",
+      "node_modules/glob/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/exiftool-vendored",
+        "to": "exiftool-vendored",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}

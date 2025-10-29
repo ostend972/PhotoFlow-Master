@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <title>PhotoFlow Master - Organisation Professionnelle de Projets Photo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- En-tête de l'application -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <div class="logo-text">
+          <h1>PhotoFlow Master</h1>
+          <p class="subtitle">Organisation Professionnelle de Projets Photo</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-preferences" class="btn-icon" title="Préférences">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6M1 12h6m6 0h6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteneur principal -->
+  <main class="main-container">
+    <!-- Panneau gauche - Sources -->
+    <section class="panel panel-left">
+      <div class="panel-header">
+        <h2>Sources de Photos</h2>
+        <span id="source-count" class="badge">0</span>
+      </div>
+
+      <div class="panel-content">
+        <!-- Zone de drag & drop -->
+        <div id="drop-zone" class="drop-zone">
+          <svg class="drop-zone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p class="drop-zone-text">Glissez-déposez des dossiers ici</p>
+          <p class="drop-zone-subtext">ou</p>
+          <button id="btn-add-source" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Ajouter un Dossier
+          </button>
+        </div>
+
+        <!-- Liste des sources -->
+        <div id="sources-list" class="sources-list"></div>
+      </div>
+
+      <div class="panel-footer">
+        <button id="btn-clear-sources" class="btn btn-secondary btn-full">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+          Vider la Liste
+        </button>
+      </div>
+    </section>
+
+    <!-- Panneau central - Configuration -->
+    <section class="panel panel-center">
+      <div class="panel-header">
+        <h2>Configuration</h2>
+      </div>
+
+      <div class="panel-content panel-scroll">
+        <!-- Destination -->
+        <div class="config-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            Destination
+          </h3>
+          <div class="input-group">
+            <input type="text" id="destination-path" class="input-text" placeholder="Sélectionnez le dossier de destination..." readonly>
+            <button id="btn-select-destination" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+              Parcourir
+            </button>
+          </div>
+          <div id="disk-space-info" class="info-text hidden"></div>
+        </div>
+
+        <!-- Mode d'opération -->
+        <div class="config-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+              <polyline points="13 2 13 9 20 9"/>
+            </svg>
+            Mode d'Opération
+          </h3>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="copy-mode" value="copy" checked>
+              <span class="radio-custom"></span>
+              <span class="radio-text">
+                <strong>Copier</strong>
+                <small>Dupliquer les fichiers (conserve les originaux)</small>
+              </span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="copy-mode" value="move">
+              <span class="radio-custom"></span>
+              <span class="radio-text">
+                <strong>Déplacer</strong>
+                <small>Déplacer les fichiers (supprime les originaux)</small>
+              </span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="copy-mode" value="symlink">
+              <span class="radio-custom"></span>
+              <span class="radio-text">
+                <strong>Liens Symboliques</strong>
+                <small>Créer des liens (économise l'espace disque)</small>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Options avancées -->
+        <div class="config-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6M1 12h6m6 0h6"/>
+            </svg>
+            Options Avancées
+          </h3>
+
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="verify-integrity">
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-text">
+                <strong>Vérifier l'intégrité (MD5)</strong>
+                <small>Valider que les fichiers copiés sont identiques</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="select-group">
+            <label for="duplicate-strategy">Gestion des doublons</label>
+            <select id="duplicate-strategy" class="select-input">
+              <option value="rename">Renommer automatiquement (photo_1.jpg, photo_2.jpg...)</option>
+              <option value="skip">Ignorer (ne pas copier)</option>
+              <option value="replace">Remplacer (écraser l'existant)</option>
+            </select>
+          </div>
+
+          <div class="select-group">
+            <label for="rename-pattern">Pattern de renommage</label>
+            <select id="rename-pattern" class="select-input">
+              <option value="{original}">Nom original</option>
+              <option value="{date}_{original}">Date_Nom</option>
+              <option value="{project}_{counter:04d}">Projet_0001</option>
+              <option value="{date}_{project}_{counter:04d}">Date_Projet_0001</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Aperçu de la structure -->
+        <div class="config-section">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            Structure de Projet
+          </h3>
+          <div class="structure-preview">
+            <div class="tree">
+              <div class="tree-item">📁 PROJETS_PHOTO/ANNÉE/DATE_NOM/</div>
+              <div class="tree-item indent-1">├── 01_PRE-PRODUCTION/</div>
+              <div class="tree-item indent-2">│   ├── Moodboard/</div>
+              <div class="tree-item indent-2">│   ├── References/</div>
+              <div class="tree-item indent-2">│   └── Brief/</div>
+              <div class="tree-item indent-1">├── 02_RAW/ <span class="highlight">(photos sources)</span></div>
+              <div class="tree-item indent-1">├── 03_SELECTS/</div>
+              <div class="tree-item indent-1">├── 04_RETOUCHE/</div>
+              <div class="tree-item indent-2">│   ├── PSD/</div>
+              <div class="tree-item indent-2">│   └── FINALS/</div>
+              <div class="tree-item indent-1">├── 05_VIDEO/</div>
+              <div class="tree-item indent-1">└── 06_ADMIN/</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <button id="btn-analyze" class="btn btn-secondary btn-full">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          Analyser les Sources
+        </button>
+        <button id="btn-organize" class="btn btn-success btn-full" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Lancer l'Organisation
+        </button>
+      </div>
+    </section>
+
+    <!-- Panneau droit - Journal -->
+    <section class="panel panel-right">
+      <div class="panel-header">
+        <h2>Journal d'Activité</h2>
+        <button id="btn-clear-log" class="btn-icon" title="Effacer le journal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="panel-content">
+        <div id="log-container" class="log-container"></div>
+      </div>
+
+      <div class="panel-footer">
+        <div id="progress-container" class="progress-container hidden">
+          <div class="progress-header">
+            <span id="progress-label">Traitement en cours...</span>
+            <button id="btn-cancel" class="btn btn-danger btn-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+              Annuler
+            </button>
+          </div>
+          <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <div id="progress-details" class="progress-details"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de statistiques -->
+  <div id="stats-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Statistiques des Sources</h2>
+        <button class="modal-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="stats-content"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script de rendu -->
+  <script src="renderer.js"></script>
+</body>
+</html>
